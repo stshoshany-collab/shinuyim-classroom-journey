@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#1F4E79">
+<title>שינויים – המסע שלי בכיתה</title>
+<style>
+/* Layout: a teacher's notebook. Lock screen first; inside, a 4-station path on top and the open station as working cards */
+:root{
+  --paper:#F4F7FB; --surface:#FFFFFF; --ink:#1B2B3A; --muted:#5A6B7C; --line:#D8E1EB;
+  --blue:#1F4E79; --blue-soft:#E6EEF7; --amber:#A8650B; --amber-soft:#FBEFD9;
+  --green:#2C7A4D; --green-soft:#E3F2E9; --red:#A8261E; --red-soft:#FBE9E7;
+  --f:"Segoe UI","Arial Hebrew","Noto Sans Hebrew",Arial,sans-serif;
+  --r:10px;
+  --s1:#1F5F99; --s1-soft:#E3EEF9; --s2:#0E7A72; --s2-soft:#DBF1EE; --s3:#3D7A29; --s3-soft:#E5F2DC; --s4:#B0502A; --s4-soft:#FAE6DB; --on-st:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root{
+  --paper:#0F1720; --surface:#16212C; --ink:#E5ECF3; --muted:#9AABBD; --line:#2A3A4B;
+  --blue:#8DB8E6; --blue-soft:#1A2D41; --amber:#E9A748; --amber-soft:#3A2B13;
+  --green:#6EC392; --green-soft:#15301F; --red:#F08A82; --red-soft:#3B1B19;
+  --s1:#8DB8E6; --s1-soft:#1A2D41; --s2:#6FD1C6; --s2-soft:#113431; --s3:#9BD07D; --s3-soft:#1C3317; --s4:#F2A07A; --s4-soft:#3B1F15; --on-st:#0F1720; color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.st1{--st:var(--s1);--st-soft:var(--s1-soft)} .st2{--st:var(--s2);--st-soft:var(--s2-soft)} .st3{--st:var(--s3);--st-soft:var(--s3-soft)} .st4{--st:var(--s4);--st-soft:var(--s4-soft)}
+#station .card>h3{margin:-16px -16px 0;padding:10px 16px;background:var(--st-soft);color:var(--st);border-radius:var(--r) var(--r) 0 0;border-bottom:3px solid var(--st);font-size:18px}
+#station details.sheet{border-color:var(--st)}
+#station details.sheet>summary{background:var(--st-soft);color:var(--st);font-size:17px;border-radius:7px}
+#station details.sheet[open]>summary{background:var(--st);color:var(--on-st);border-radius:7px 7px 0 0;margin-bottom:12px}
+#station details.sheet[open]>summary::after{color:var(--on-st)}
+#station .station-head{background:var(--st-soft);border-right:6px solid var(--st)}
+#station .station-head h2{color:var(--st);font-size:24px}
+.stbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:10px;align-items:center;padding:8px 14px;border-radius:999px;background:var(--st);color:var(--on-st);font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.stbar span{font-weight:400;opacity:.9}
+.path li.st1 button,.path li.st2 button,.path li.st3 button,.path li.st4 button{border-top:5px solid var(--st)}
+.path li button[aria-current="step"]{background:var(--st-soft);border-color:var(--st);box-shadow:inset 0 -4px 0 var(--st)}
+.path li .num{color:var(--st)}
+#station .btn.primary{background:var(--st);border-color:var(--st);color:var(--on-st)}
+#station .btn:not(.primary):not(.ghost){border-color:var(--st);color:var(--st)}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.6;
+  padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));
+  padding-top:max(16px,env(safe-area-inset-top,0px));padding-bottom:max(40px,env(safe-area-inset-bottom,0px))}
+.wrap{max-width:980px;margin:0 auto;display:grid;gap:18px}
+h1,h2,h3,h4{text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:clamp(24px,5vw,32px);color:var(--blue)}
+h2{font-size:20px}
+h3{font-size:17px}
+p{margin:0}
+.muted{color:var(--muted)}
+.eyebrow{font-size:13px;letter-spacing:.03em;color:var(--muted);font-weight:600}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+a{color:var(--blue)}
+.btn{border:1px solid var(--blue);background:var(--surface);color:var(--blue);padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;min-height:42px}
+.btn.primary{background:var(--blue);color:var(--surface)}
+.btn.small{padding:4px 12px;font-size:14px;min-height:34px}
+.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0;align-content:start}
+.note{font-size:14.5px;padding:10px 12px;border-radius:8px;background:var(--amber-soft)}
+.note.safe{background:var(--red-soft)}
+.note.idea{background:var(--green-soft)}
+.note.info{background:var(--blue-soft)}
+.field{display:grid;gap:4px}
+.field>span{font-weight:600;font-size:14.5px}
+textarea,input[type=text],input[type=password],input[type=number],input[type=date],input[type=email],input[type=tel],select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font-size:16px}
+textarea{min-height:64px;resize:vertical}
+textarea[readonly],input[readonly]{background:transparent;border-style:dashed}
+.err{color:var(--red);font-weight:600;font-size:14.5px}
+
+/* lock screen */
+.lock{max-width:460px;margin:6vh auto 0;display:grid;gap:16px}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tabs button{flex:1;border:0;background:transparent;padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-pressed="true"]{background:var(--blue);color:var(--surface)}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.who{display:flex;flex-wrap:wrap;gap:10px}
+.who label{display:grid;gap:2px;font-size:13px;color:var(--muted);font-weight:600}
+.who input{width:min(200px,40vw)}
+.status{font-size:13px;padding:4px 10px;border-radius:999px;background:var(--green-soft);color:var(--green);font-weight:600;white-space:nowrap}
+.status.warn{background:var(--amber-soft);color:var(--amber)}
+.menu{display:flex;flex-wrap:wrap;gap:8px}
+
+/* path */
+.path{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.path button{width:100%;height:100%;text-align:right;display:grid;gap:6px;align-content:start;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);cursor:pointer}
+.path button[aria-current="step"]{border-color:var(--blue);box-shadow:inset 0 -4px 0 var(--blue)}
+.path .num{font-weight:700;font-size:13px;color:var(--blue)}
+.path .t{font-weight:600;font-size:15px;line-height:1.3}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;display:block}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.pct{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.path{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.station-head{display:grid;gap:10px;padding:16px;border-radius:var(--r);background:var(--blue-soft)}
+.gp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gp>div{min-width:0}
+.gp b{display:block;font-size:13px;color:var(--blue)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.grid2,.gp{grid-template-columns:1fr}}
+.checks{display:grid;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{width:22px;height:22px;margin-top:2px;accent-color:var(--green);flex:none}
+.check.done span{color:var(--muted)}
+.wk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.wk label{display:grid;gap:4px;justify-items:start;padding:10px;border:1px solid var(--line);border-radius:8px;cursor:pointer;min-width:0}
+.wk label.on{background:var(--green-soft);border-color:var(--green)}
+.wk small{color:var(--muted);font-weight:600}
+@media (max-width:560px){.wk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+details.sheet{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+details.sheet>summary{cursor:pointer;padding:12px 14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:8px}
+details.sheet>summary::-webkit-details-marker{display:none}
+details.sheet>summary::after{content:"+";color:var(--blue);font-weight:700}
+details.sheet[open]>summary::after{content:"–"}
+details.sheet>.body{padding:0 14px 14px;display:grid;gap:12px}
+.groups{display:grid;gap:10px}
+.groups h4{font-size:14px;color:var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;gap:6px;align-items:center;padding:5px 10px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:14px;background:var(--surface)}
+.chip.on{background:var(--blue-soft);border-color:var(--blue);color:var(--blue);font-weight:600}
+.chip input{accent-color:var(--blue)}
+.rows{display:grid;gap:10px}
+.rowcard{border:1px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.rowcard .del{grid-column:1/-1;justify-self:start}
+.tools{display:grid;gap:8px}
+.tool{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.tool>div{min-width:0}
+.tool b{display:block}
+.soon{font-size:13px;color:var(--muted);white-space:nowrap}
+.mform{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-items:end}
+@media (max-width:640px){.mform{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chart{width:100%;max-width:520px;height:auto;display:block}
+.chart text{font-family:var(--f);font-size:11px;fill:var(--muted)}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:4px;vertical-align:middle}
+.mrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:4px 0;border-bottom:1px dashed var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+.pill{font-size:12px;padding:1px 8px;border-radius:99px;background:var(--blue-soft);color:var(--blue);font-weight:600}
+.pill.after{background:var(--green-soft);color:var(--green)}
+.mapgrid{display:grid;gap:10px}
+.mapgrid .mr{display:grid;gap:6px;border:1px solid var(--line);border-radius:8px;padding:10px}
+.mapgrid .mc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.mapgrid .mc{grid-template-columns:1fr}}
+.teachers{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;font-size:12px;color:var(--muted)}
+.mini>div{display:grid;gap:3px}
+.empty{padding:22px;border:1px dashed var(--line);border-radius:var(--r);text-align:center;color:var(--muted);display:grid;gap:6px}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;width:min(560px,94vw)}
+dialog::backdrop{background:rgba(10,20,30,.45)}
+dialog .in{padding:18px;display:grid;gap:12px}
+.jump{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:20;display:grid;gap:8px}
+.jump .btn{box-shadow:0 3px 12px rgba(0,0,0,.18);background:var(--surface)}
+.jump .btn.primary{background:var(--blue);color:var(--surface)}
+footer{font-size:13px;color:var(--muted);text-align:center}
+#printarea{display:none}
+@media print{
+  :root{--paper:#FFFFFF;--surface:#FFFFFF;--ink:#1B2B3A;--muted:#5A6B7C;--line:#D8E1EB;--blue:#1F4E79;--blue-soft:#E6EEF7;--green:#2C7A4D;--green-soft:#E3F2E9;--amber-soft:#FBEFD9;color-scheme:light}
+  body.printing{background:#fff;padding:0}
+  body.printing>*:not(#printarea){display:none!important}
+  body.printing #printarea{display:block}
+  #printarea .st{break-inside:avoid}
+  #printarea .bar i,#printarea .bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== lock screen ===== -->
+<main id="lock" class="lock" aria-labelledby="lock-title">
+  <div>
+    <p class="eyebrow">שינויים · ערכת המחנכת</p>
+    <h1 id="lock-title">המסע שלי בכיתה</h1>
+    <p class="muted">מקום אחד לעבודה של כל התוכנית: ארבע תחנות, דפי עבודה, מדד התקדמות ויומן.</p>
+  </div>
+  <div class="tabs" role="group" aria-label="כניסה או הרשמה">
+    <button id="t-login" type="button" aria-pressed="true">כניסה</button>
+    <button id="t-new" type="button" aria-pressed="false">משתמשת חדשה</button>
+  </div>
+  <form id="auth" class="card" novalidate>
+    <label class="field" for="u"><span>שם משתמש</span><input id="u" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>
+    <label class="field" for="p"><span>סיסמה</span><input id="p" type="password" autocomplete="current-password" required></label>
+    <label class="field" for="p2" id="p2wrap" hidden><span>אימות סיסמה</span><input id="p2" type="password" autocomplete="new-password"></label>
+    <p id="newnote" class="note" hidden>הסיסמה שומרת על המידע מוצפן במכשיר הזה. אין דרך לשחזר סיסמה שנשכחה, ולכן כדאי לשמור גיבוי מדי פעם. לפחות 8 תווים.</p>
+    <p id="autherr" class="err" role="alert" hidden></p>
+    <button class="btn primary" id="authbtn" type="submit">כניסה</button>
+  </form>
+  <div class="card">
+    <h3>עוברת למכשיר אחר?</h3>
+    <p class="muted">טוענים את קובץ הגיבוי ששמרת ואז נכנסים עם אותה סיסמה.</p>
+    <label class="btn" for="restorefile" style="width:max-content;display:inline-flex;align-items:center">טעינת קובץ גיבוי</label>
+    <input id="restorefile" type="file" accept=".masa,application/json" hidden>
+    <p id="restoremsg" class="muted" role="status"></p>
+  </div>
+  <p class="note info">המידע נשמר מוצפן רק במכשיר ובדפדפן שבהם את עובדת. שום דבר לא נשלח לשום מקום, אלא אם בחרת לשלוח סיכום.</p>
+</main>
+
+<!-- ===== app ===== -->
+<div id="app" class="wrap" hidden>
+  <header class="top">
+    <div>
+      <p class="eyebrow">שינויים · ערכת המחנכת</p>
+      <h1>המסע שלי בכיתה</h1>
+    </div>
+    <div class="who" id="who">
+      <label for="tname">שם המחנכת<input id="tname" type="text" autocomplete="off"></label>
+      <label for="tclass">כיתה<input id="tclass" type="text" autocomplete="off" placeholder="למשל ג׳2"></label>
+    </div>
+    <span class="status" id="status" role="status">נשמר</span>
+  </header>
+  <nav class="menu" aria-label="פעולות">
+    <button class="btn primary" id="b-send" type="button">סיכום תהליך</button>
+    <button class="btn" id="b-backup" type="button">שמירת גיבוי</button>
+    <button class="btn" id="b-mentor" type="button" aria-pressed="false">מבט מנחה</button>
+    <button class="btn" id="b-settings" type="button">הגדרות</button>
+    <button class="btn ghost" id="b-logout" type="button">יציאה</button>
+  </nav>
+
+  <section id="journey" class="wrap" style="gap:16px">
+    <div class="row" id="viewing" hidden><button class="btn small" id="back" type="button">חזרה לכל המחנכות</button><b id="viewing-name"></b><button class="btn small" id="v-word" type="button">סיכום מלא בוורד</button><button class="btn small" id="v-pdf" type="button">סיכום מלא ב־PDF</button><span class="muted" id="vmsg" role="status"></span></div>
+    <div class="card" id="intro" style="background:var(--blue-soft);border-color:var(--blue)">
+      <p class="eyebrow">לפני שמתחילים</p>
+      <div class="tool" style="background:var(--surface)"><div><b>ניתוח התנהגות – היכרות</b><span class="muted">הסבר פשוט על הקשר בין לפני, התנהגות ואחרי. כדאי להתחיל כאן.</span></div>
+      <a class="btn small primary" href="https://stshoshany-collab.github.io/behavioral-app/" target="_blank" rel="noopener noreferrer">פתיחה</a></div>
+    </div>
+    <ol class="path" id="path" aria-label="ארבע התחנות"></ol>
+    <article id="station" class="wrap" style="gap:16px"></article>
+  </section>
+
+  <section id="mentor" class="wrap" hidden>
+    <div class="card">
+      <h2>מבט מנחה</h2>
+      <p class="muted">טוענים כאן את קובצי הוורד של הסיכום המלא שהמחנכות שולחות, ורואים את ההתקדמות של כולן. הקבצים נשמרים מוצפנים בחשבון שלך במכשיר הזה.</p>
+      <div class="row"><label class="btn primary" for="importfile" style="display:inline-flex;align-items:center">טעינת סיכומים מלאים</label><span class="muted" id="importmsg" role="status"></span></div>
+      <input id="importfile" type="file" accept=".docx,.json" multiple hidden>
+    </div>
+    <div class="teachers" id="teachers"></div>
+  </section>
+
+  <div class="jump" id="jump" hidden>
+    <button class="btn small primary" id="j-station" type="button">לתחילת התחנה</button>
+    <button class="btn small" id="j-top" type="button">לדף הפתיחה</button>
+  </div>
+  <footer>שומרים על פרטיות: כותבים שם פרטי או ראשי תיבות של תלמידים בלבד.</footer>
+</div>
+
+<!-- ===== send dialog ===== -->
+<dialog id="d-send" aria-labelledby="send-title"><div class="in">
+  <h2 id="send-title">סיכום תהליך</h2>
+  <section class="card" style="gap:10px">
+    <h3>אפשרויות שמירה</h3>
+    <div class="tool"><div><b>קובץ וורד</b><span class="muted">מסמך לעריכה, לשמירה במכשיר ולצירוף להודעה</span></div><button class="btn small" id="s-word" type="button">שמירה</button></div>
+    <div class="tool"><div><b>קובץ PDF</b><span class="muted">מסמך מוכן להדפסה. בחלון שנפתח בוחרים "שמירה כ־PDF"</span></div><button class="btn small" id="s-pdf" type="button">שמירה</button></div>
+    <div class="tool"><div><b>וואטסאפ</b><span class="muted">הודעה קצרה עם עיקרי הסיכום, בלי קובץ</span></div><button class="btn small" id="s-wa" type="button">פתיחה</button></div>
+    <div class="tool"><div><b>סיכום מלא לאסתי (וורד)</b><span class="muted">כל דפי העבודה, המדד והיומן. אסתי טוענת אותו במבט המנחה</span></div><button class="btn small" id="s-data" type="button">שמירה</button></div>
+  </section>
+  <section id="s-mailwrap" class="card" style="gap:10px">
+    <h3>שליחה במייל</h3>
+    <p>הסיכום יישלח ישירות אל:</p>
+    <ul id="s-recips" style="margin:0;padding-inline-start:20px;display:grid;gap:4px"></ul>
+    <button class="btn primary" id="s-mail" type="button">שליחה במייל</button>
+  </section>
+  <p class="muted" id="sendmsg" role="status"></p>
+  <p style="font-weight:700;color:var(--green);font-size:18px">בהצלחה!</p>
+  <button class="btn ghost" type="button" data-close>סגירה</button>
+</div></dialog>
+
+<!-- ===== settings dialog ===== -->
+<dialog id="d-settings" aria-labelledby="set-title"><div class="in">
+  <h2 id="set-title">הגדרות</h2>
+  <h3>החלפת סיסמה</h3>
+  <label class="field" for="np1"><span>סיסמה חדשה</span><input id="np1" type="password" autocomplete="new-password"></label>
+  <label class="field" for="np2"><span>אימות סיסמה חדשה</span><input id="np2" type="password" autocomplete="new-password"></label>
+  <button class="btn" id="chpw" type="button">החלפת סיסמה</button>
+  <p class="muted" id="setmsg" role="status"></p>
+  <hr style="border:0;border-top:1px solid var(--line);width:100%">
+  <h3>מחיקת החשבון מהמכשיר</h3>
+  <p class="muted">מוחק את כל המידע של החשבון הזה מהמכשיר. מומלץ לשמור גיבוי לפני כן.</p>
+  <label class="field" for="delconfirm"><span>כדי לאשר, כתבי: מחיקה</span><input id="delconfirm" type="text" autocomplete="off"></label>
+  <button class="btn danger" id="delacc" type="button">מחיקת החשבון</button>
+  <button class="btn ghost" type="button" data-close>סגירה</button>
+</div></dialog>
+
+<script>
+(function(){
+"use strict";
+/* ================= content ================= */
+var GH="https://stshoshany-collab.github.io/";
+var WEEKS=["מפגש חשיבה משותפת","הדגמה והתנסות בכיתה","תצפית ומשוב","בדיקה וסיכום"];
+var ST=[
+ {n:1,month:"חודש ראשון",title:"להבין לפני שמגיבים",goal:"לזהות מה קורה לפני ההתנהגות ואחריה ומה כבר עובד",product:"תיאור ברור של המצב ויעד אחד: כיתתי, קבוצתי או אישי",
+  idea:"כל התנהגות מספרת לנו משהו. כשמבינים מה קרה רגע לפני ומה קרה מיד אחרי, אפשר לבחור תגובה שבאמת עוזרת.",
+  tasks:["בחרתי מצב אחד שחוזר בכיתה","ערכתי לפחות שתי תצפיות קצרות","מילאתי את רשימת הבדיקה","ניסחתי יעד אחד: כיתתי, קבוצתי או אישי"],
+  measure:"כמה פעמים ההתנהגות הופיעה בתצפית של 20 דקות",
+  tools:[{n:"עוצרים. בודקים. מבינים. משנים.",d:"עוזר לזהות מה מעורר את ההתנהגות ואיזו התנהגות חלופית אפשר ללמד",u:""}]},
+ {n:2,month:"חודש שני",title:"מעברים ושגרות שאפשר להצליח בהם",goal:"לבנות שגרות ברורות שמאפשרות לכיתה להתחיל וללמוד",product:"שגרת מעבר מתורגלת ועזר חזותי",
+  idea:"כשהכיתה יודעת בדיוק מה עושים ובאיזה סדר, יותר תלמידים מצליחים להתחיל ופחות זמן הולך לאיבוד.",
+  tasks:["בחרתי מעבר אחד","בניתי רצף חזותי ותליתי אותו בכיתה או הצגתי על המסך","תרגלתי את הרצף עם הכיתה בזמן רגוע","מדדתי את זמן המעבר לפחות שלוש פעמים לפני ושלוש פעמים אחרי"],
+  measure:"כמה דקות עוברות מהסימן המוסכם ועד שרוב הכיתה מתחילה את משימת הפתיחה",
+  tools:[{n:"סדר היום שלי",d:"לוח תחנות על המסך עם טיימרים, סימון ביצוע ודוח יומי",u:GH+"class-schedule/"},
+         {n:"טיימר מהלך שיעור",d:"שלבי השיעור על המסך: מליאה, ביצוע משימות ושיקוף הצלחות",u:""},
+         {n:"היום שלנו מתחיל!",d:"לוח יומי לתלמידים צעירים עם משימות, כוכבים, טיימר ופינת רגיעה",u:""}]},
+ {n:3,month:"חודש שלישי",title:"לחזק וללמד",goal:"להגביר התנהגויות למידה והתנהגויות חברתיות רצויות",product:"תוכנית חיזוק כיתתית ותוכנית להוראת התנהגות חלופית",
+  idea:"התנהגות שזוכה לתשומת לב – חוזרת על עצמה. כשאנחנו שמות לב להתנהגויות רצויות ומלמדות דרכים חדשות ומקובלות לפעול בהן, התלמידים רוכשים התנהגויות המחזקות באופן אישי ותורמות לרווחה האישית והכללית בכיתה.",
+  tasks:["בחרתי התנהגות אחת לחיזוק והגדרתי אותה","הפעלתי יעד כיתתי משותף","בחרתי התנהגות חלופית אחת ולימדתי אותה בזמן רגוע","תיעדתי הצלחות בביצוע ההתנהגות"],
+  measure:"כמה פעמים בשיעור אחד התלמידים השתמשו בהתנהגות שבחרנו",
+  tools:[{n:"מעקב הצלחות יומיות",d:"תיעוד הצלחות לפי מיומנויות, גרפים ועדכון קצר להורים",u:""},
+         {n:"הדרך שלי להצלחות",d:"לוח בחירה: התלמיד בוחר פעילות, אוסף כוכבים ומחליף אותם",u:""},
+         {n:"מה קורה עכשיו?",d:"תרגול מצבים חברתיים ובחירת תגובה מתאימה",u:""},
+         {n:"מה עושים כש...?",d:"התלמיד בוחר רגש ומתרגל דרך להתמודד",u:""},
+         {n:"שלום! מוכן להתמודד עם היום?",d:"ניהול עצמי לתלמידים בכיתות הגבוהות",u:""},
+         {n:"FlexMind-Edu",d:"רעיונות לפעילויות לגמישות מחשבתית",u:"https://flexi-mind-builder.lovable.app"}]},
+ {n:4,month:"חודש רביעי",title:"התארגנות למניעת מצבים מאתגרים / תגובה במצבים מאתגרים",goal:"להיערך מראש כדי למנוע מצבים מאתגרים ולהגיב בהם בביטחון, בעקביות ובתיאום עם הצוות",product:"מפת תגובה (לפני, בזמן ואחרי) ודף הסכמות צוותי",
+  idea:"רוב העבודה נעשית לפני שהקושי מופיע: מזהים מראש את הנסיבות שמעוררות קושי, נערכים אליהן ומלמדים את התלמידים מה אפשר לעשות במקום. כשמצב מאתגר בכל זאת מתרחש, כל הצוות יודע איך להגיב בשקט, בעקביות ובאופן בטוח ואיך לחזור ללמידה.",
+  tasks:["מילאתי מפת תגובה לתלמיד אחד או למצב כיתתי אחד","תיאמתי עם המורות המקצועיות והסייעת ומילאנו יחד דף הסכמות","תרגלתי עם התלמיד את דרך בקשת העזרה בזמן רגוע","תיעדתי אירועים לאורך שבועיים"],
+  measure:"כמה אירועים היו השבוע",
+  tools:[{n:"טפסי דיווח",d:"דיווח על התנהגות אסורה בשיעור ועל אירוע אלים",u:"https://report-page.lovable.app"},
+         {n:"תיעוד אירועי אלימות שבועי",d:"רישום אירועים לאורך השבוע וסיכום שבועי",u:""},
+         {n:"משחק הדרקונים",d:"זיהוי רגשות ותגובות. מתאים לשיחה ברגע רגוע",u:GH+"dragon-game-/"}]}
+];
+var BEFORE=[
+ ["אופן הצגת ההנחיה",["ממרחק","לכל הכיתה","בטון נחרץ","באופן פתאומי","נדרש תיווך נוסף","משימה כמקשה אחת","אפשרות אחת בלבד","מעבר ליכולת הנוכחית","בזמן עומס רגשי"]],
+ ["דרישות לימודיות",["הקשבה במליאה","כתיבה","העתקה ממושכת","משימה ארוכה","משימה קשה מדי","משימה קלה או משעממת","קושי קודם באותו מקצוע"]],
+ ["מעברים והתארגנות",["כניסה לשיעור","חזרה מהפסקה","מעבר בין פעילויות","סיום פעילות אהובה","שינוי בלוח הזמנים","המתנה לתור או לתשומת לב"]],
+ ["מצבים חברתיים",["הקנטה","ריב עם חבר","הפסד במשחק","ויכוח על כללים","דחייה חברתית","תחרות","לקחו חפץ או מקום","תחושה של חוסר צדק"]],
+ ["תשומת לב",["תשומת הלב של המורה הופנתה לאחר","משוב מתקן או הערה","הפסקת פעילות אהובה"]]
+];
+var GOALQ=["איזה מצב הכי מפריע ללמידה בכיתה?","מה אני רוצה לראות במקום? (התנהגות שאפשר לראות ולספור)","מתי ובאיזה שיעור זה הכי חשוב?","מה כבר עובד היום, גם אם רק לפעמים?","איך נדע שהתקדמנו?"];
+var TRANS=["הכנה: איך מזכירים לפני המעבר?","רצף ברור: מה הצעדים לפי הסדר?","תמיכה בוויסות: מה אפשר לבחור ולמי?","התחלה נגישה: מה משימת הפתיחה?","תרגול: מתי ואיך נתרגל בזמן רגוע?","חיזוק: מה נגיד כשהכיתה מצליחה?"];
+var REINF=["איזו התנהגות נחזק? (מה בדיוק רואים)","מתי ובאיזה שיעור?","משפטי משוב שאשתמש בהם","מה משמח את התלמידים? (שאלי אותם)","היעד הקבוצתי: מה הכיתה משיגה יחד?","איך נפחית בהדרגה את הפרסים ונשמור על הכרה ותחושת הצלחה?"];
+var ALT=["מה התלמיד משיג היום מההתנהגות? (עזרה, הפסקה, תשומת לב, הצטרפות)","מה נלמד במקום? (משפט, כרטיס או תנועה)","איך אדגים?","מתי נתרגל בזמן רגוע?","איך אזכיר ברגע האמת?","איך אחזק כל ניסיון?"];
+var MAPR=["מה אני רואה?","מה אני עושה?","מה אני אומרת? (משפט קצר)","מי עוזר לי?"], MAPC=["לפני","בזמן","אחרי"];
+var JOURNAL=[["tried","מה ניסיתי?"],["worked","מה הצליח?"],["change","מה אשנה?"],["question","שאלה למפגש הבא"]];
+var ANTE=[["אופן הצגת ההנחיה",["הנחיה ממרחק","הנחיה לכל הכיתה","הנחיה בטון נחרץ","הנחיה פתאומית","נדרש תיווך נוסף","משימה כמקשה אחת","אפשרות אחת בלבד","מעבר ליכולת הנוכחית","בזמן עומס רגשי"]],
+ ["דרישות",["דרישה להקשבה","דרישה לביצוע משימה","דרישה להתארגנות","משימה קשה או ארוכה","משימה בכתב"]],
+ ["מעברים",["כניסה לשיעור","חזרה מהפסקה","מעבר בין פעילויות","סיום פעילות אהובה","שינוי בלוח הזמנים"]],
+ ["המתנה ותשומת לב",["המתנה לתור או לעזרה","תשומת הלב של המורה הופנתה לאחר","משוב מתקן או הערה","זמן לא מובנה"]],
+ ["מצבים חברתיים",["ויכוח או ריב עם חבר","הקנטה","הפסד או תחרות","דחייה חברתית"]]];
+var CONSQ=[["תשומת לב מורה",["פנייה אל התלמיד","תזכורת","סיוע","שיחה אישית"]],
+ ["תשומת לב תלמידים",["צחוק","פנייה","ויכוח"]],
+ ["שינוי בדרישה",["הקלה במשימה","התלמיד יצא מהפעילות","התלמיד קיבל עזרה","התלמיד קיבל הפסקה"]],
+ ["בריחה מדרישה",["המשימה לא בוצעה"]],
+ ["תגובות נוספות",["התעלמות מכוונת","הערה או נזיפה","הוצאה מהכיתה","התלמיד קיבל חפץ או פעילות שרצה","חזרה ללמידה בלי תגובה מיוחדת"]]];
+var OBSCOLS=[["time","שעה","time"],["before","מה קרה רגע לפני",ANTE],["beh","מה התלמיד עשה"],["after","מה קרה מיד אחרי",CONSQ],["note","הערות"]];
+function cellText(r,k){var v=r[k]||"",d=r[k+"_d"]||"";return v&&d?v+" · "+d:(v||d)}
+var TEAMCOLS=[["sit","מצב"],["what","מה עושים"],["who","מי אחראי"],["how","איך מעדכנים"]];
+var SHEETDESC={"דף תצפית קצר":"רישום מסודר של מה קרה לפני, מה התלמיד עשה ומה קרה אחרי","מה קרה רגע לפני? רשימת בדיקה":"נסיבות שכיחות: אופן הצגת ההנחיה, משימות, מעברים ומצבים חברתיים","בחירת יעד":"יעד כיתתי, קבוצתי או אישי, מנוסח בבירור","תוכנית שגרת מעבר":"הכנה, רצף, ויסות, התחלה נגישה, תרגול וחיזוק","הכנת עזר חזותי בעזרת בינה מלאכותית":"הנחיה מוכנה להעתקה","תוכנית חיזוק כיתתית":"בחירת התנהגות, משוב, מחזקים ויעד קבוצתי","תוכנית להוראת התנהגות חלופית":"מה נלמד במקום ואיך נלמד ונחזק","מפת תגובה":"מה עושים לפני, בזמן ואחרי","דף הסכמות צוותי":"מי עושה מה ובאיזה מצב ואיך מעדכנים"};
+var AIPROMPT="הכיני טיוטה לעזר חזותי לכיתה ב' המתאר ארבע פעולות בחזרה מהפסקה. השתמשי במשפטים קצרים וחיוביים ובמילים שילדים יכולים לקרוא. כללי אפשרות לבקשת עזרה. הציעי טקסט וסמל פשוט לכל שלב.";
+
+/* ================= state ================= */
+function blankStation(){return {weeks:[false,false,false,false],tasks:[false,false,false,false],measure:[],journal:{}}}
+function blank(){return {v:1,teacherName:"",className:"",station:1,settings:{},mentor:{teachers:{}},s1:blankStation(),s2:blankStation(),s3:blankStation(),s4:blankStation()}}
+function norm(d){var b=blank();if(!d||typeof d!=="object")return b;
+  ["teacherName","className"].forEach(function(k){if(typeof d[k]==="string")b[k]=d[k]});
+  if([1,2,3,4].indexOf(d.station)>=0)b.station=d.station;
+  if(d.settings&&typeof d.settings==="object")b.settings=d.settings;
+  if(d.mentor&&d.mentor.teachers&&typeof d.mentor.teachers==="object")b.mentor=d.mentor;
+  for(var i=1;i<=4;i++){var s=d["s"+i];if(s&&typeof s==="object"){var o=Object.assign(blankStation(),s);
+    if(!Array.isArray(o.weeks)||o.weeks.length!==4)o.weeks=blankStation().weeks;if(!Array.isArray(o.tasks)||o.tasks.length!==4)o.tasks=blankStation().tasks;
+    if(!Array.isArray(o.measure))o.measure=[];if(!o.journal||typeof o.journal!=="object")o.journal={};b["s"+i]=o}}
+  return b}
+var J=blank(), ro=false, viewing=null, own=null, KEY=null, USER=null, USERKEY=null;
+var $=function(id){return document.getElementById(id)};
+function el(tag,attrs){var e=document.createElement(tag);if(attrs)for(var k in attrs){var v=attrs[k];
+  if(k==="class")e.className=v;else if(k==="text")e.textContent=v;else if(k.slice(0,2)==="on")e.addEventListener(k.slice(2),v);
+  else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
+  for(var i=2;i<arguments.length;i++)add(e,arguments[i]);return e}
+function add(e,c){if(c==null||c===false)return;if(Array.isArray(c)){c.forEach(function(x){add(e,x)});return}e.append(c.nodeType?c:document.createTextNode(String(c)))}
+function getP(o,p){return p.split(".").reduce(function(a,k){return a==null?undefined:a[k]},o)}
+function setP(o,p,v){var ks=p.split(".");var a=o;for(var i=0;i<ks.length-1;i++){if(a[ks[i]]==null||typeof a[ks[i]]!=="object")a[ks[i]]={};a=a[ks[i]]}a[ks[ks.length-1]]=v}
+function pctOf(d,s){var x=d&&d[s];if(!x)return 0;var all=(x.weeks||[]).concat(x.tasks||[]);return Math.round(100*all.filter(Boolean).length/8)}
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function heDate(iso){if(!iso)return"";var p=iso.slice(0,10).split("-");return p[2]+"/"+p[1]+"/"+p[0]}
+function reduced(){return matchMedia("(prefers-reduced-motion: reduce)").matches}
+
+/* ================= crypto & storage ================= */
+var ITER=310000, enc=new TextEncoder(), dec=new TextDecoder();
+function b64(buf){var s="",b=new Uint8Array(buf);for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s)}
+function unb64(s){var bin=atob(s),b=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b}
+function deriveKey(pw,salt,iter){return crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveKey"]).then(function(base){
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])})}
+function sealWith(key,salt,iter,obj){var iv=crypto.getRandomValues(new Uint8Array(12));
+  return crypto.subtle.encrypt({name:"AES-GCM",iv:iv},key,enc.encode(JSON.stringify(obj))).then(function(ct){return {app:"masa",v:1,iter:iter,salt:b64(salt),iv:b64(iv),ct:b64(ct)}})}
+function openWith(key,box){return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(box.iv)},key,unb64(box.ct)).then(function(pt){return JSON.parse(dec.decode(pt))})}
+function ukey(name){return "masa.u."+name.trim().toLowerCase()}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+var SALT=null;
+
+var timer=null,saving=false,pending=false;
+function status(t,warn){var s=$("status");s.textContent=t;s.classList.toggle("warn",!!warn)}
+function touch(){if(ro||!KEY)return;status("שומר…");clearTimeout(timer);timer=setTimeout(save,700)}
+function save(){if(!KEY)return Promise.resolve();if(saving){pending=true;return Promise.resolve()}saving=true;
+  var data=own||J;data.updatedAt=new Date().toISOString();
+  return sealWith(KEY,SALT,ITER,data).then(function(box){box.user=USER;if(lsSet(USERKEY,JSON.stringify(box)))status("נשמר");else status("לא נשמר: אין מקום פנוי בדפדפן. שמרי גיבוי",true)})
+   .catch(function(){status("לא נשמר. נסי שוב",true)})
+   .then(function(){saving=false;if(pending){pending=false;save()}})}
+
+/* ================= auth ================= */
+var isNew=false;
+function setTab(n){isNew=n;$("t-login").setAttribute("aria-pressed",!n);$("t-new").setAttribute("aria-pressed",n);
+  $("p2wrap").hidden=!n;$("newnote").hidden=!n;$("authbtn").textContent=n?"יצירת חשבון":"כניסה";$("p").autocomplete=n?"new-password":"current-password";$("autherr").hidden=true}
+$("t-login").addEventListener("click",function(){setTab(false)});
+$("t-new").addEventListener("click",function(){setTab(true)});
+function authErr(t){var e=$("autherr");e.textContent=t;e.hidden=false}
+var tries=0,lockUntil=0;
+$("auth").addEventListener("submit",function(ev){ev.preventDefault();
+  if(!window.crypto||!crypto.subtle){authErr("הדפדפן הזה לא תומך בהצפנה. פתחי את הקישור בכרום, ספארי או אדג׳.");return}
+  var u=$("u").value.trim(),p=$("p").value;$("autherr").hidden=true;
+  if(!u){authErr("כתבי שם משתמש");return}
+  if(Date.now()<lockUntil){authErr("יותר מדי ניסיונות. נסי שוב בעוד דקה");return}
+  var k=ukey(u),stored=lsGet(k);var btn=$("authbtn");btn.disabled=true;
+  var done=function(){btn.disabled=false};
+  if(isNew){
+    if(stored){authErr("כבר יש במכשיר הזה חשבון בשם הזה. בחרי שם אחר או היכנסי");done();return}
+    if(p.length<8){authErr("הסיסמה צריכה להכיל לפחות 8 תווים");done();return}
+    if(p!==$("p2").value){authErr("שתי הסיסמאות לא זהות");done();return}
+    SALT=crypto.getRandomValues(new Uint8Array(16));
+    deriveKey(p,SALT,ITER).then(function(key){KEY=key;USER=u;USERKEY=k;J=blank();J.teacherName=u;J.createdAt=new Date().toISOString();
+      registerAccount(u);return save()}).then(function(){done();enter()}).catch(function(){done();authErr("משהו השתבש ביצירת החשבון. נסי שוב")});
+  }else{
+    if(!stored){authErr("לא נמצא במכשיר הזה חשבון בשם הזה. בדקי את השם, צרי חשבון חדש או טעני גיבוי");done();return}
+    var box;try{box=JSON.parse(stored)}catch(e){authErr("המידע במכשיר פגום. טעני קובץ גיבוי");done();return}
+    var salt=unb64(box.salt);
+    deriveKey(p,salt,box.iter||ITER).then(function(key){return openWith(key,box).then(function(obj){KEY=key;SALT=salt;ITER=box.iter||ITER;USER=box.user||u;USERKEY=k;J=norm(obj);tries=0;done();enter()})})
+      .catch(function(){tries++;if(tries>=5){lockUntil=Date.now()+60000;tries=0}done();authErr("הסיסמה לא נכונה")});
+  }
+});
+function registerAccount(u){}
+function enter(){$("p").value="";$("p2").value="";$("lock").hidden=true;$("app").hidden=false;viewing=null;ro=false;showMode("journey");status("נשמר");armIdle();
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}}
+function logout(msg){clearTimeout(timer);if(viewing)closeTeacher();var p=KEY?save():Promise.resolve();p.then(function(){KEY=null;SALT=null;J=blank();own=null;viewing=null;ro=false;
+  $("station").replaceChildren();$("teachers").replaceChildren();$("app").hidden=true;$("lock").hidden=false;setTab(false);
+  if(msg)authErr(msg);$("u").focus()})}
+$("b-logout").addEventListener("click",function(){logout()});
+var idle=null;function armIdle(){clearTimeout(idle);idle=setTimeout(function(){if(KEY)logout("יצאת אוטומטית אחרי 20 דקות בלי פעילות. המידע נשמר.")},20*60*1000)}
+["pointerdown","keydown","input"].forEach(function(t){document.addEventListener(t,function(){if(KEY)armIdle()},{passive:true})});
+document.addEventListener("visibilitychange",function(){if(document.hidden&&KEY){clearTimeout(timer);save()}});
+
+/* restore backup */
+$("restorefile").addEventListener("change",function(e){var f=e.target.files[0];e.target.value="";if(!f)return;
+  f.text().then(function(t){var box=JSON.parse(t);if(!box||box.app!=="masa"||!box.ct||!box.salt)throw 0;
+    var name=box.user||"";if(!name){$("restoremsg").textContent="הקובץ לא מכיל שם משתמש";return}
+    var k=ukey(name),exists=lsGet(k);
+    var go=function(){lsSet(k,JSON.stringify(box));$("restoremsg").textContent="הגיבוי נטען. היכנסי עם שם המשתמש "+name+" והסיסמה שלך.";$("u").value=name;setTab(false);$("p").focus()};
+    if(exists){var m=$("restoremsg");m.replaceChildren(el("span",{text:"במכשיר כבר יש חשבון בשם "+name+". להחליף אותו בגיבוי? "}),el("button",{class:"btn small danger",type:"button",onclick:go},"כן, להחליף"))}else go();
+  }).catch(function(){$("restoremsg").textContent="זה לא קובץ גיבוי של המסע שלי בכיתה"})});
+
+/* ================= downloads & sharing ================= */
+function safeName(s){return (s||"").replace(/[\\/:*?"<>|\s]+/g,"_").replace(/^_+|_+$/g,"").slice(0,40)||"מחנכת"}
+function download(name,blob){var a=el("a",{href:URL.createObjectURL(blob),download:name});document.body.append(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
+$("b-backup").addEventListener("click",function(){if(!KEY)return;save().then(function(){var raw=lsGet(USERKEY);if(!raw)return;
+  download("masa-backup_"+today()+".masa",new Blob([raw],{type:"application/json"}));status("קובץ הגיבוי נשמר. הוא מוצפן ונפתח רק עם הסיסמה שלך")})});
+
+/* ================= reports ================= */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function avg(a){return a.length?Math.round(10*a.reduce(function(x,y){return x+y},0)/a.length)/10:null}
+function msum(rows){var b=rows.filter(function(r){return r.phase!=="after"}).map(function(r){return +r.value}),a=rows.filter(function(r){return r.phase==="after"}).map(function(r){return +r.value});
+  return {b:avg(b),a:avg(a),nb:b.length,na:a.length}}
+function msumText(rows){var m=msum(rows);if(!m.nb&&!m.na)return"עדיין אין מדידות";var t=[];if(m.nb)t.push("ממוצע לפני השינוי: "+m.b+" ("+m.nb+" מדידות)");if(m.na)t.push("ממוצע אחרי השינוי: "+m.a+" ("+m.na+" מדידות)");return t.join(" · ")}
+function stationStatus(d,t){var s=d["s"+t.n],w=s.weeks.filter(Boolean).length,k=s.tasks.filter(Boolean).length;return w+" מתוך 4 שבועות · "+k+" מתוך 4 משימות"}
+function textSummary(d,who){var L=[];L.push((who==="principal"?"עדכון התקדמות":"סיכום")+" – המסע שלי בכיתה");L.push((d.teacherName||"")+(d.className?" · כיתה "+d.className:"")+" · "+heDate(today()));
+  ST.forEach(function(t){var s=d["s"+t.n];L.push("");L.push("תחנה "+t.n+": "+t.title+" ("+pctOf(d,"s"+t.n)+"%)");L.push(stationStatus(d,t));L.push("מדד"+(s.target?" ("+s.target+")":"")+": "+msumText(s.measure));
+    if(t.n===1&&s.goal&&s.goal.final)L.push(goalLabel(s.goal)+": "+s.goal.final);
+    if(who!=="principal"&&s.journal&&s.journal.question)L.push("שאלה למפגש הבא: "+s.journal.question)});
+  L.push("");L.push(who==="principal"?"הסיכום אינו כולל פרטים על תלמידים.":"הקובץ המלא מצורף בנפרד.");return L.join("\n")}
+function qa(label,val){return val?"<div class=qa><b>"+esc(label)+"</b><p>"+esc(val).replace(/\n/g,"<br>")+"</p></div>":""}
+function chartSVG(rows){if(!rows.length)return"";var W=320,H=150,pl=28,pr=20,pt=10,pb=24;var vals=rows.map(function(r){return +r.value||0});var max=Math.max.apply(null,[1].concat(vals));
+  var step=max<=5?1:max<=10?2:max<=25?5:Math.ceil(max/25)*5;var top=Math.ceil(max/step)*step;
+  var X=function(i){return W-pr-(rows.length<2?(W-pl-pr)/2:i*(W-pl-pr)/(rows.length-1))};var Y=function(v){return pt+(H-pt-pb)*(1-v/top)};
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="גרף המדידות">';
+  for(var v=0;v<=top;v+=step)s+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--line)"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+v+'</text>';
+  if(rows.length>1)s+='<polyline fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3" points="'+rows.map(function(r,i){return X(i)+","+Y(+r.value||0)}).join(" ")+'"/>';
+  rows.forEach(function(r,i){s+='<circle cx="'+X(i)+'" cy="'+Y(+r.value||0)+'" r="'+(i===rows.length-1?5.5:4)+'" fill="'+(r.phase==="after"?"var(--green)":"var(--blue)")+'" stroke="var(--surface)" stroke-width="1.5"/><text x="'+X(i)+'" y="'+(H-6)+'" text-anchor="middle">'+esc(r.date?r.date.slice(8,10)+"/"+r.date.slice(5,7):i+1)+'</text>'});
+  return s+"</svg>"}
+function reportHTML(d,who){var full=who!=="principal";var css=document.querySelector("style").textContent.split("/* lock screen */")[0]+".bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:block}.bar i{display:block;height:100%;background:var(--green);border-radius:99px}.chart{width:100%;max-width:520px;height:auto;display:block}.chart text{font-family:var(--f);font-size:11px;fill:var(--muted)}";
+  var h='<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+  '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:">'+
+  '<title>'+esc((full?"סיכום":"עדכון התקדמות")+" – "+(d.teacherName||"")+" – "+heDate(today()))+'</title><style>'+css+
+  '.rep{max-width:820px;margin:0 auto;display:grid;gap:14px}.qa{display:grid;gap:2px}.qa b{font-size:14px;color:var(--blue)}.st{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;background:var(--surface)}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid var(--line);padding:5px 7px;text-align:right;vertical-align:top}th{background:var(--blue-soft)}.tw{overflow-x:auto}'+
+  '</style></head><body><div class="rep">'+
+  '<div><p class="eyebrow">שינויים · ערכת המחנכת · '+(full?"סיכום לאסתי":"עדכון למנהלת בית הספר")+'</p><h1>'+esc(d.teacherName||"מחנכת")+(d.className?" · כיתה "+esc(d.className):"")+'</h1><p class="muted">הופק ב־'+heDate(today())+'</p></div>';
+  if(!full)h+='<p class="note info">עדכון קצר על ההתקדמות בתוכנית. העדכון אינו כולל פרטים על תלמידים.</p>';
+  ST.forEach(function(t){var s=d["s"+t.n];h+='<section class="st"><p class="eyebrow">תחנה '+t.n+'</p><h2>'+esc(t.title)+'</h2>'+
+    '<div class="bar"><i style="width:'+pctOf(d,"s"+t.n)+'%"></i></div><p class="muted">'+pctOf(d,"s"+t.n)+'% הושלם · '+stationStatus(d,t)+'</p>'+
+    '<p><b>המטרה:</b> '+esc(t.goal)+'</p>'+(s.target?'<p><b>ההתנהגות שעוקבים אחריה:</b> '+esc(s.target)+'</p>':'')+'<p><b>המדד:</b> '+esc(t.measure)+'. '+esc(msumText(s.measure))+'</p>'+(s.measure.length?chartSVG(s.measure):"");
+    if(t.n===1&&s.goal)h+=qa(goalLabel(s.goal),s.goal.final);
+    if(t.n===2&&s.trans)h+=qa("המעבר שנבחר",s.trans.name);
+    if(t.n===3&&s.reinf)h+=qa("ההתנהגות שמחזקים",s.reinf.q0)+qa("היעד הקבוצתי",s.reinf.q4);
+    if(full){
+      if(t.n===1){if(s.obs&&s.obs.length)h+='<h3>דף תצפית</h3><div class="tw"><table><tr>'+OBSCOLS.map(function(c){return"<th>"+c[1]+"</th>"}).join("")+'</tr>'+s.obs.map(function(r){return"<tr>"+OBSCOLS.map(function(c){return"<td>"+esc(cellText(r,c[0]))+"</td>"}).join("")+"</tr>"}).join("")+'</table></div>';
+        var bf=[];BEFORE.forEach(function(g,gi){g[1].forEach(function(it,ii){if(s.before&&s.before[gi+"-"+ii])bf.push(it)})});if(bf.length)h+=qa("מה קרה רגע לפני",bf.join(" · "));
+        h+=qa("מתי זה לא קורה",s.notWhen);if(s.goal)GOALQ.forEach(function(q,i){h+=qa(q,s.goal["q"+i])})}
+      if(t.n===2&&s.trans)TRANS.forEach(function(q,i){h+=qa(q,s.trans["q"+i])});
+      if(t.n===3){if(s.reinf)REINF.forEach(function(q,i){if(i!==0&&i!==4)h+=qa(q,s.reinf["q"+i])});if(s.alt)ALT.forEach(function(q,i){h+=qa(q,s.alt["q"+i])})}
+      if(t.n===4){if(s.map){var any=false;var tb='<h3>מפת תגובה'+(s.mapfor?" · "+esc(s.mapfor):"")+'</h3><div class="tw"><table><tr><th></th>'+MAPC.map(function(c){return"<th>"+c+"</th>"}).join("")+'</tr>'+MAPR.map(function(r,ri){return"<tr><th>"+r+"</th>"+MAPC.map(function(c,ci){var v=s.map["r"+ri+"c"+ci];if(v)any=true;return"<td>"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+'</table></div>';if(any)h+=tb}
+        if(s.team&&s.team.length)h+='<h3>הסכמות צוותיות</h3><div class="tw"><table><tr>'+TEAMCOLS.map(function(c){return"<th>"+c[1]+"</th>"}).join("")+'</tr>'+s.team.map(function(r){return"<tr>"+TEAMCOLS.map(function(c){return"<td>"+esc(r[c[0]])+"</td>"}).join("")+"</tr>"}).join("")+'</table></div>'}
+      JOURNAL.forEach(function(j){h+=qa(j[1],s.journal&&s.journal[j[0]])})}
+    h+='</section>'});
+  if(full){var data=Object.assign({},d);delete data.settings;delete data.mentor;data.exportedAt=new Date().toISOString();
+    h+='<p class="muted">כדי לראות את הסיכום במבט המנחה, טוענים את הקובץ הזה באפליקציה "המסע שלי בכיתה".</p><script type="application/json" id="masa-data">'+JSON.stringify(data).replace(/</g,"\\u003c")+'<\/script>'}
+  return h+'</div></body></html>'}
+
+var sendWho="principal";
+var RECIPIENTS=[{n:"אסתי",d:"מנחת התוכנית"}];
+var MAIL_URL="https://script.google.com/macros/s/AKfycbzltI-lCyIQmiGUs_6m7q-gcdwWtciwVCNMKVz3bM3mFr8FMQ7xgdD13vZg-VAo2js8/exec";
+$("b-send").addEventListener("click",openSend);
+function openSend(){$("sendmsg").textContent="";$("s-mailwrap").hidden=!MAIL_URL;$("s-recips").replaceChildren.apply($("s-recips"),RECIPIENTS.map(function(r){return el("li",{},el("b",{text:r.n}),r.e?el("span",{dir:"ltr",text:" · "+r.e}):null,r.d?el("span",{class:"muted",text:" · "+r.d}):null)}));$("d-send").showModal()}
+function reportFile(){var who=sendWho;var name=(who==="principal"?"masa-short_":"masa-summary_")+today()+".html";
+  return new File([who==="principal"?shortHTML(J):reportHTML(J,who)],name,{type:"text/html"})}
+function tally(rows,key){var m={};(rows||[]).forEach(function(r){var v=r[key];if(v&&v!=="אחר")m[v]=(m[v]||0)+1});return Object.keys(m).sort(function(a,b){return m[b]-m[a]}).map(function(k){return [k,m[k]]})}
+function bars(list,total){if(!list.length)return'<p class="muted">לא סומן</p>';return'<div class="tal">'+list.map(function(x){var w=Math.round(100*x[1]/Math.max(1,total));return'<div class="tr"><span>'+esc(x[0])+'</span><span class="bar"><i style="width:'+w+'%"></i></span><b>'+x[1]+'</b></div>'}).join("")+'</div>'}
+function shortHTML(d){var css=document.querySelector("style").textContent.split("/* lock screen */")[0]+".bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:block}.bar i{display:block;height:100%;background:var(--green);border-radius:99px}.chart{width:100%;max-width:520px;height:auto;display:block}.chart text{font-family:var(--f);font-size:11px;fill:var(--muted)}";var any=false;
+  var h='<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+  '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:">'+
+  '<title>'+esc("דף סיכום קצר – "+(d.teacherName||"")+" – "+heDate(today()))+'</title><style>'+css+
+  '.rep{max-width:760px;margin:0 auto;display:grid;gap:12px}.st{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;background:var(--surface)}.kv{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:4px 12px}.kv b{color:var(--blue)}.tal{display:grid;gap:4px}.tr{display:grid;grid-template-columns:minmax(0,1fr) 120px 28px;gap:8px;align-items:center;font-size:14px}.tr b{text-align:left;font-variant-numeric:tabular-nums}.big{font-size:22px;font-weight:700;color:var(--green)}@media(max-width:520px){.kv{grid-template-columns:1fr}.tr{grid-template-columns:minmax(0,1fr) 80px 24px}}'+
+  '</style></head><body><div class="rep"><div><p class="eyebrow">שינויים · ערכת המחנכת · דף סיכום קצר</p><h1>'+esc(d.teacherName||"מחנכת")+(d.className?" · כיתה "+esc(d.className):"")+'</h1><p class="muted">הופק ב־'+heDate(today())+'</p></div>';
+  ST.forEach(function(t){var s=d["s"+t.n];var p=pctOf(d,"s"+t.n);var obs=s.obs||[];var has=p>0||s.measure.length||obs.length||s.target||(s.goal&&s.goal.final);if(!has)return;any=true;
+    h+='<section class="st"><p class="eyebrow">תחנה '+t.n+'</p><h2>'+esc(t.title)+'</h2><div class="bar"><i style="width:'+p+'%"></i></div><p class="muted">'+p+'% הושלם · '+stationStatus(d,t)+'</p><div class="kv">';
+    if(t.n===1&&s.goal&&s.goal.final)h+='<b>'+(s.goal.level==="group"?"היעד הקבוצתי":s.goal.level==="personal"?"היעד האישי":"היעד הכיתתי")+'</b><span>'+esc(s.goal.final)+'</span>';
+    if(t.n===2&&s.trans&&s.trans.name)h+='<b>המעבר שנבחר</b><span>'+esc(s.trans.name)+'</span>';
+    if(t.n===3&&s.reinf&&s.reinf.q0)h+='<b>ההתנהגות שמחזקים</b><span>'+esc(s.reinf.q0)+'</span>';
+    if(t.n===3&&s.reinf&&s.reinf.q4)h+='<b>היעד הקבוצתי</b><span>'+esc(s.reinf.q4)+'</span>';
+    if(t.n===4&&s.team&&s.team.length)h+='<b>הסכמות צוותיות</b><span>'+s.team.length+' הסכמות</span>';
+    if(s.target)h+='<b>ההתנהגות שעוקבים אחריה</b><span>'+esc(s.target)+'</span>';
+    var done=t.tasks.filter(function(x,i){return s.tasks[i]});if(done.length)h+='<b>מה בוצע</b><span>'+done.map(esc).join("<br>")+'</span>';
+    if(s.journal&&s.journal.tried)h+='<b>מה ניסיתי</b><span>'+esc(s.journal.tried)+'</span>';
+    if(s.journal&&s.journal.worked)h+='<b>מה הצליח</b><span>'+esc(s.journal.worked)+'</span>';
+    h+='</div>';
+    if(t.n===1&&obs.length){h+='<h3>מה עלה בתצפיות ('+obs.length+' תיעודים)</h3><p class="muted">מה קרה רגע לפני</p>'+bars(tally(obs,"before"),obs.length)+'<p class="muted">מה קרה מיד אחרי</p>'+bars(tally(obs,"after"),obs.length)}
+    if(s.measure.length){var m=msum(s.measure);h+='<h3>מעקב התדירות</h3><p class="muted">'+esc(t.measure)+'</p>'+chartSVG(s.measure)+'<p>'+esc(msumText(s.measure))+'</p>';
+      if(m.nb&&m.na&&m.b>0){var ch=Math.round(100*(m.a-m.b)/m.b);h+='<p class="big">'+(ch>0?"עלייה של ":ch<0?"ירידה של ":"ללא שינוי")+(ch?Math.abs(ch)+"%":"")+'</p>'}}
+    h+='</section>'});
+  if(!any)h+='<p class="note info">עדיין אין נתונים להצגה.</p>';
+  return h+'<p class="muted">הסיכום אינו כולל שמות או פרטים מזהים של תלמידים.</p></div></body></html>'}
+$("s-word").addEventListener("click",function(){exportWord()});
+$("s-pdf").addEventListener("click",function(){exportPDF()});
+$("s-mail").addEventListener("click",sendMail);
+$("s-data").addEventListener("click",function(){exportData()});
+$("s-wa").addEventListener("click",function(){window.open("https://wa.me/?text="+encodeURIComponent(textSummary(J,sendWho)),"_blank","noopener")});
+document.querySelectorAll("[data-close]").forEach(function(b){b.addEventListener("click",function(){b.closest("dialog").close()})});
+
+/* ================= Word (docx) & PDF export ================= */
+var CRC=(function(){var t=new Uint32Array(256);for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(b){var c=0xFFFFFFFF;for(var i=0;i<b.length;i++)c=CRC[(c^b[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0}
+function zip(files){var parts=[],central=[],off=0;
+  files.forEach(function(f){var name=enc.encode(f.name),data=typeof f.data==="string"?enc.encode(f.data):f.data,crc=crc32(data);
+    var h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);
+    parts.push(new Uint8Array(h.buffer),name,data);
+    var c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+    central.push(new Uint8Array(c.buffer),name);off+=30+name.length+data.length});
+  var csize=central.reduce(function(a,b){return a+b.length},0);var e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,csize,true);e.setUint32(16,off,true);
+  return new Blob(parts.concat(central,[new Uint8Array(e.buffer)]),{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"})}
+function xe(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]}).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"")}
+var DC={blue:"1F4E79",muted:"5A6B7C",green:"2C7A4D",soft:"E6EEF7",line:"D8E1EB",st:["1F5F99","0E7A72","3D7A29","B0502A"],stsoft:["E3EEF9","DBF1EE","E5F2DC","FAE6DB"]};
+function run(text,o){o=o||{};var rp='<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>'+(o.b?'<w:b/><w:bCs/>':'')+(o.color?'<w:color w:val="'+o.color+'"/>':'')+'<w:sz w:val="'+(o.sz||22)+'"/><w:szCs w:val="'+(o.sz||22)+'"/><w:rtl/>';
+  return String(text==null?"":text).split("\n").map(function(line,i){return (i?'<w:r><w:br/></w:r>':'')+'<w:r><w:rPr>'+rp+'</w:rPr><w:t xml:space="preserve">'+xe(line)+'</w:t></w:r>'}).join("")}
+function para(runs,o){o=o||{};return '<w:p><w:pPr><w:bidi/>'+(o.shade?'<w:shd w:val="clear" w:color="auto" w:fill="'+o.shade+'"/>':'')+(o.border?'<w:pBdr><w:right w:val="single" w:sz="24" w:space="6" w:color="'+o.border+'"/></w:pBdr>':'')+'<w:spacing w:before="'+(o.before||0)+'" w:after="'+(o.after==null?100:o.after)+'"/><w:jc w:val="right"/>'+(o.keep?'<w:keepNext/>':'')+'</w:pPr>'+runs+'</w:p>'}
+function tbl(rows,o){o=o||{};var n=rows[0].length;var w=o.widths||rows[0].map(function(){return Math.floor(5000/n)});
+  var x='<w:tbl><w:tblPr><w:bidiVisual/><w:tblW w:w="5000" w:type="pct"/><w:tblBorders>'+["top","left","bottom","right","insideH","insideV"].map(function(s){return '<w:'+s+' w:val="single" w:sz="4" w:color="'+DC.line+'"/>'}).join("")+'</w:tblBorders><w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>'+w.map(function(v){return '<w:gridCol w:w="'+Math.round(v*9638/5000)+'"/>'}).join("")+'</w:tblGrid>';
+  rows.forEach(function(r,ri){var hd=o.header&&ri===0;x+='<w:tr>'+(hd?'<w:trPr><w:tblHeader/></w:trPr>':'')+r.map(function(c,ci){var fill=hd?(o.hfill||DC.blue):(o.firstCol&&ci===0?DC.soft:null);
+    return '<w:tc><w:tcPr><w:tcW w:w="'+w[ci]+'" w:type="pct"/>'+(fill?'<w:shd w:val="clear" w:color="auto" w:fill="'+fill+'"/>':'')+'</w:tcPr>'+para(run(c,{b:hd||(o.firstCol&&ci===0),color:hd?"FFFFFF":null,sz:20}),{after:0})+'</w:tc>'}).join("")+'</w:tr>'});
+  return x+'</w:tbl>'+para("",{after:60})}
+var IMGN=0;
+function imgXml(rid,wcm,hcm){var cx=Math.round(wcm*360000),cy=Math.round(hcm*360000);IMGN++;
+  return '<w:p><w:pPr><w:bidi/><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+IMGN+'" name="chart'+IMGN+'"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="'+IMGN+'" name="chart'+IMGN+'.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>'}
+function chartPNG(rows){return new Promise(function(res){var W=640,H=300,pl=50,pr=40,pt=20,pb=44;var cv=document.createElement("canvas");cv.width=W;cv.height=H;var g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);
+  var vals=rows.map(function(r){return +r.value||0});var max=Math.max.apply(null,[1].concat(vals));var step=max<=5?1:max<=10?2:max<=25?5:Math.ceil(max/25)*5;var top=Math.ceil(max/step)*step;
+  var X=function(i){return W-pr-(rows.length<2?(W-pl-pr)/2:i*(W-pl-pr)/(rows.length-1))};var Y=function(v){return pt+(H-pt-pb)*(1-v/top)};
+  g.font="20px Arial";g.textAlign="right";g.fillStyle="#5A6B7C";g.strokeStyle="#D8E1EB";g.lineWidth=1.5;
+  for(var v=0;v<=top;v+=step){g.beginPath();g.moveTo(pl,Y(v));g.lineTo(W-pr,Y(v));g.stroke();g.fillText(String(v),pl-10,Y(v)+7)}
+  if(rows.length>1){g.setLineDash([6,6]);g.strokeStyle="#5A6B7C";g.lineWidth=2.5;g.beginPath();rows.forEach(function(r,i){var x=X(i),y=Y(+r.value||0);i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke();g.setLineDash([])}
+  g.textAlign="center";rows.forEach(function(r,i){g.beginPath();g.arc(X(i),Y(+r.value||0),i===rows.length-1?10:8,0,7);g.fillStyle=r.phase==="after"?"#2C7A4D":"#1F4E79";g.fill();g.lineWidth=3;g.strokeStyle="#fff";g.stroke();
+    g.fillStyle="#5A6B7C";g.fillText(r.date?r.date.slice(8,10)+"/"+r.date.slice(5,7):String(i+1),X(i),H-12)});
+  cv.toBlob(function(b){b.arrayBuffer().then(function(a){res(new Uint8Array(a))})},"image/png")})}
+function docBlocks(d,who){var B=[];var full=who!=="principal";
+  B.push({k:"x",x:para(run(full?"שינויים · ערכת המחנכת · סיכום לאסתי":"שינויים · ערכת המחנכת · דף סיכום קצר",{color:DC.muted,sz:20}),{after:40})});
+  B.push({k:"x",x:para(run((d.teacherName||"מחנכת")+(d.className?" · כיתה "+d.className:""),{b:true,color:DC.blue,sz:40}),{after:40})});
+  B.push({k:"x",x:para(run("הופק ב־"+heDate(today()),{color:DC.muted,sz:20}),{after:200})});
+  var shown=0;
+  ST.forEach(function(t){var s=d["s"+t.n];var p=pctOf(d,"s"+t.n);var obs=s.obs||[];var has=full||p>0||s.measure.length||obs.length||s.target||(s.goal&&s.goal.final);if(!has)return;shown++;var c=DC.st[t.n-1];
+    B.push({k:"x",x:para(run("תחנה "+t.n,{color:c,sz:20,b:true}),{before:240,after:20,keep:true})});
+    B.push({k:"x",x:para(run(t.title,{b:true,color:c,sz:30}),{shade:DC.stsoft[t.n-1],border:c,after:80,keep:true})});
+    B.push({k:"x",x:para(run(p+"% הושלם · "+stationStatus(d,t),{color:DC.muted,sz:20}))});
+    var kv=[];
+    if(t.n===1&&s.goal&&s.goal.final)kv.push([full?goalLabel(s.goal):(s.goal.level==="group"?"היעד הקבוצתי":s.goal.level==="personal"?"היעד האישי":"היעד הכיתתי"),s.goal.final]);
+    if(t.n===2&&s.trans&&s.trans.name)kv.push(["המעבר שנבחר",s.trans.name]);
+    if(t.n===3&&s.reinf&&s.reinf.q0)kv.push(["ההתנהגות שמחזקים",s.reinf.q0]);
+    if(t.n===3&&s.reinf&&s.reinf.q4)kv.push(["היעד הקבוצתי",s.reinf.q4]);
+    if(t.n===4&&s.team&&s.team.length&&!full)kv.push(["הסכמות צוותיות",s.team.length+" הסכמות"]);
+    if(s.target)kv.push(["ההתנהגות שעוקבים אחריה",s.target]);
+    if(!full){var done=t.tasks.filter(function(x,i){return s.tasks[i]});if(done.length)kv.push(["מה בוצע",done.join("\n")]);if(s.journal&&s.journal.tried)kv.push(["מה ניסיתי",s.journal.tried]);if(s.journal&&s.journal.worked)kv.push(["מה הצליח",s.journal.worked])}
+    if(kv.length)B.push({k:"x",x:tbl(kv,{widths:[1700,3300],firstCol:true})});
+    if(t.n===1&&obs.length){
+      if(full){B.push({k:"x",x:para(run("דף תצפית",{b:true,sz:24}),{before:120,keep:true})});B.push({k:"x",x:tbl([OBSCOLS.map(function(c){return c[1]})].concat(obs.map(function(r){return OBSCOLS.map(function(c){return cellText(r,c[0])})})),{header:true,hfill:c})})}
+      else{B.push({k:"x",x:para(run("מה עלה בתצפיות ("+obs.length+" תיעודים)",{b:true,sz:24}),{before:120,keep:true})});
+        var tb=tally(obs,"before"),ta=tally(obs,"after");
+        if(tb.length)B.push({k:"x",x:tbl([["מה קרה רגע לפני","מספר פעמים"]].concat(tb.map(function(x){return [x[0],String(x[1])]})),{header:true,hfill:c,widths:[3800,1200]})});
+        if(ta.length)B.push({k:"x",x:tbl([["מה קרה מיד אחרי","מספר פעמים"]].concat(ta.map(function(x){return [x[0],String(x[1])]})),{header:true,hfill:c,widths:[3800,1200]})})}}
+    if(s.measure.length){var m=msum(s.measure);B.push({k:"x",x:para(run("מעקב התדירות",{b:true,sz:24}),{before:120,keep:true})});B.push({k:"x",x:para(run(t.measure,{color:DC.muted,sz:20}),{keep:true})});
+      B.push({k:"img",rows:s.measure});B.push({k:"x",x:para(run("כחול: לפני השינוי · ירוק: אחרי השינוי",{color:DC.muted,sz:18}))});B.push({k:"x",x:para(run(msumText(s.measure)))});
+      if(m.nb&&m.na&&m.b>0){var ch=Math.round(100*(m.a-m.b)/m.b);B.push({k:"x",x:para(run(ch>0?"עלייה של "+ch+"%":ch<0?"ירידה של "+Math.abs(ch)+"%":"ללא שינוי",{b:true,color:DC.green,sz:28}))})}}
+    if(full){var qa2=function(q,v){if(v){B.push({k:"x",x:para(run(q,{b:true,color:DC.blue,sz:20}),{after:20,keep:true})});B.push({k:"x",x:para(run(v))})}};
+      if(t.n===1){var bf=[];BEFORE.forEach(function(g,gi){g[1].forEach(function(it,ii){if(s.before&&s.before[gi+"-"+ii])bf.push(it)})});qa2("מה קרה רגע לפני (רשימת הבדיקה)",bf.join(" · "));qa2("מתי זה לא קורה",s.notWhen);if(s.goal)GOALQ.forEach(function(q,i){qa2(q,s.goal["q"+i])})}
+      if(t.n===2&&s.trans)TRANS.forEach(function(q,i){qa2(q,s.trans["q"+i])});
+      if(t.n===3){if(s.reinf)REINF.forEach(function(q,i){if(i!==0&&i!==4)qa2(q,s.reinf["q"+i])});if(s.alt)ALT.forEach(function(q,i){qa2(q,s.alt["q"+i])})}
+      if(t.n===4){if(s.map){var mrows=MAPR.map(function(r,ri){return [r].concat(MAPC.map(function(c,ci){return s.map["r"+ri+"c"+ci]||""}))});if(mrows.some(function(r){return r.slice(1).some(Boolean)})){B.push({k:"x",x:para(run("מפת תגובה"+(s.mapfor?" · "+s.mapfor:""),{b:true,sz:24}),{before:120,keep:true})});B.push({k:"x",x:tbl([[""].concat(MAPC)].concat(mrows),{header:true,hfill:c,firstCol:true})})}}
+        if(s.team&&s.team.length){B.push({k:"x",x:para(run("הסכמות צוותיות",{b:true,sz:24}),{before:120,keep:true})});B.push({k:"x",x:tbl([TEAMCOLS.map(function(c){return c[1]})].concat(s.team.map(function(r){return TEAMCOLS.map(function(c){return r[c[0]]||""})})),{header:true,hfill:c})})}}
+      JOURNAL.forEach(function(j){qa2(j[1],s.journal&&s.journal[j[0]])})}});
+  if(!shown)B.push({k:"x",x:para(run("עדיין אין נתונים להצגה."))});
+  if(!full)B.push({k:"x",x:para(run("הסיכום אינו כולל שמות או פרטים מזהים של תלמידים.",{color:DC.muted,sz:20}),{before:200})});
+  return B}
+function buildDocx(d,who,embed){var B=docBlocks(d,who);var media=[],rels=[];IMGN=0;
+  return Promise.all(B.map(function(b){return b.k==="img"?chartPNG(b.rows).then(function(png){var n=media.length+1;media.push({name:"word/media/chart"+n+".png",data:png});rels.push('<Relationship Id="rIdC'+n+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/chart'+n+'.png"/>');return imgXml("rIdC"+n,12,5.6)}):Promise.resolve(b.x)}))
+  .then(function(xs){var body=xs.join("");
+    var doc='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/><w:bidi/></w:sectPr></w:body></w:document>';
+    var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:rtl/><w:lang w:val="he-IL" w:bidi="he-IL"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:bidi/><w:spacing w:after="100" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>';
+    var files=[{name:"[Content_Types].xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="json" ContentType="application/json"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>'},
+      {name:"_rels/.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'},
+      {name:"word/document.xml",data:doc},{name:"word/styles.xml",data:styles},
+      {name:"word/_rels/document.xml.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdS" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'+rels.join("")+'</Relationships>'}].concat(media);
+    if(embed){var data=Object.assign({},d);delete data.settings;delete data.mentor;data.exportedAt=new Date().toISOString();files.push({name:"masa/data.json",data:JSON.stringify(data)})}
+    return zip(files)})}
+function unzipEntry(buf,want){var u8=new Uint8Array(buf),dv=new DataView(buf);var e=-1;for(var i=u8.length-22;i>=Math.max(0,u8.length-66000);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break}}if(e<0)return Promise.reject("nozip");
+  var n=dv.getUint16(e+10,true),off=dv.getUint32(e+16,true);
+  for(var k=0;k<n;k++){var nl=dv.getUint16(off+28,true),xl=dv.getUint16(off+30,true),cl=dv.getUint16(off+32,true);var name=dec.decode(u8.subarray(off+46,off+46+nl));
+    if(name===want){var method=dv.getUint16(off+10,true),csize=dv.getUint32(off+20,true),lo=dv.getUint32(off+42,true);var ln=dv.getUint16(lo+26,true),lx=dv.getUint16(lo+28,true);var data=u8.subarray(lo+30+ln+lx,lo+30+ln+lx+csize);
+      if(method===0)return Promise.resolve(dec.decode(data));
+      if(method===8&&window.DecompressionStream){return new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text()}
+      return Promise.reject("method")}
+    off+=46+nl+xl+cl}
+  return Promise.reject("notfound")}
+function shareOrSave(f,okMsg){if(navigator.canShare&&navigator.canShare({files:[f]})){return navigator.share({files:[f],title:f.name}).then(function(){$("sendmsg").textContent="נשלח"}).catch(function(e){if(e&&e.name==="AbortError")return;download(f.name,f);$("sendmsg").textContent=okMsg})}
+  download(f.name,f);$("sendmsg").textContent=okMsg}
+function exportWord(who,data){who=who||sendWho;data=data||J;$("sendmsg").textContent="מכינה את קובץ הוורד…";
+  buildDocx(data,who).then(function(blob){var name=(who==="principal"?"masa-short_":"masa-summary_")+safeAscii(data.teacherName)+today()+".docx";
+    shareOrSave(new File([blob],name,{type:blob.type}),"קובץ הוורד "+name+" נשמר במכשיר. צרפי אותו למייל או לוואטסאפ")}).catch(function(){$("sendmsg").textContent="לא הצלחנו להכין את הקובץ. נסי שוב"})}
+function exportPDF(who,data){who=who||sendWho;data=data||J;var html=who==="principal"?shortHTML(data):reportHTML(data,who);var doc=new DOMParser().parseFromString(html,"text/html");
+  var area=$("printarea");area.replaceChildren();var st=doc.querySelector("style");var css=document.createElement("style");css.textContent=st?st.textContent.replace(/\bbody\{[^}]*\}/,""):"";area.append(css);
+  var rep=doc.querySelector(".rep");if(rep){var dm=rep.querySelector("#masa-data");if(dm)dm.remove();area.append(document.importNode(rep,true))}
+  if($("d-send").open)$("d-send").close();document.body.classList.add("printing");setTimeout(function(){window.print()},50)}
+window.addEventListener("afterprint",function(){document.body.classList.remove("printing");$("printarea").replaceChildren()});
+function exportData(){$("sendmsg").textContent="מכינה את הסיכום המלא…";buildDocx(J,"mentor",true).then(function(blob){var name="masa-esti_"+safeAscii(J.teacherName)+today()+".docx";
+  shareOrSave(new File([blob],name,{type:blob.type}),"הסיכום המלא "+name+" נשמר. שלחי אותו לאסתי")}).catch(function(){$("sendmsg").textContent="לא הצלחנו להכין את הקובץ. נסי שוב"})}
+
+function safeAscii(s){var t=(s||"").normalize("NFKD").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,20);return t?t+"_":""}
+function b64u8(u8){var s="",CH=0x8000;for(var i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s)}
+function sendMail(){if(!MAIL_URL)return;var btn=$("s-mail");btn.disabled=true;$("sendmsg").textContent="שולחת…";
+  Promise.all([buildDocx(J,"principal").then(function(b){return b.arrayBuffer()}),buildDocx(J,"mentor",true).then(function(b){return b.arrayBuffer()})]).then(function(abs){
+    var payload={app:"masa",v:2,teacher:(J.teacherName||"").slice(0,80),className:(J.className||"").slice(0,30),date:today(),docxName:"masa-short_"+today()+".docx",docx:b64u8(new Uint8Array(abs[0])),docxEstiName:"masa-esti_"+today()+".docx",docxEsti:b64u8(new Uint8Array(abs[1])),text:textSummary(J,"principal")};
+    return fetch(MAIL_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow",referrerPolicy:"no-referrer"})})
+  .then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw 0;$("sendmsg").textContent="הסיכום נשלח אל "+RECIPIENTS.map(function(r){return r.n}).join(" ו")})
+  .catch(function(err){try{console.warn("masa send failed",err)}catch(_){}$("sendmsg").textContent=navigator.onLine===false?"אין חיבור לאינטרנט. נסי שוב כשהחיבור יחזור, או שמרי קובץ וורד":"השליחה לא הצליחה. נסי שוב בעוד רגע, או שמרי קובץ וורד ושלחי אותו בעצמך"}).then(function(){btn.disabled=false})}
+/* ================= settings ================= */
+$("b-settings").addEventListener("click",function(){$("setmsg").textContent="";$("delconfirm").value="";$("d-settings").showModal()});
+$("chpw").addEventListener("click",function(){var a=$("np1").value,b=$("np2").value;if(a.length<8){$("setmsg").textContent="לפחות 8 תווים";return}if(a!==b){$("setmsg").textContent="שתי הסיסמאות לא זהות";return}
+  var salt=crypto.getRandomValues(new Uint8Array(16));deriveKey(a,salt,ITER).then(function(k){KEY=k;SALT=salt;return save()}).then(function(){$("np1").value="";$("np2").value="";$("setmsg").textContent="הסיסמה הוחלפה. כדאי לשמור גיבוי חדש"})});
+$("delacc").addEventListener("click",function(){if($("delconfirm").value.trim()!=="מחיקה"){$("setmsg").textContent="כדי למחוק כותבים: מחיקה";return}
+  lsDel(USERKEY);KEY=null;$("d-settings").close();logout("החשבון נמחק מהמכשיר")});
+
+/* ================= journey UI ================= */
+function tarea(path,label,ph){var id="f-"+path.replace(/\./g,"-");var t=el("textarea",{id:id,rows:2,readonly:ro,placeholder:ph||""});t.value=getP(J,path)||"";
+  t.addEventListener("input",function(){setP(J,path,t.value);touch()});return label?el("label",{class:"field",for:id},el("span",{text:label}),t):t}
+function tinput(path,ph){var id="f-"+path.replace(/\./g,"-");var i=el("input",{type:"text",id:id,readonly:ro,placeholder:ph||""});i.value=getP(J,path)||"";
+  i.addEventListener("input",function(){setP(J,path,i.value);touch()});return i}
+function sheet(title,open){var body=el("div",{class:"body"});for(var i=2;i<arguments.length;i++)add(body,arguments[i]);return el("details",{class:"sheet",open:open},el("summary",{},el("span",{text:title})),body)}
+function renderPath(){var ol=$("path");ol.replaceChildren();ST.forEach(function(t){var p=pctOf(J,"s"+t.n);
+  ol.append(el("li",{class:"st"+t.n},el("button",{type:"button","aria-current":J.station===t.n?"step":false,onclick:function(){J.station=t.n;if(!ro)touch();render();$("station").scrollIntoView({behavior:reduced()?"auto":"smooth",block:"start"})}},
+    el("span",{class:"num",text:"תחנה "+t.n}),el("span",{class:"t",text:t.title}),el("span",{class:"bar","aria-hidden":"true"},el("i",{style:"width:"+p+"%"})),el("span",{class:"pct",text:p+"% הושלם"}))))})}
+function checkList(arr,items,key){return el("div",{class:"checks"},items.map(function(txt,i){var id="c-"+key+"-"+i;var c=el("input",{type:"checkbox",id:id,disabled:ro});c.checked=!!arr[i];
+  var lab=el("label",{class:"check"+(arr[i]?" done":""),for:id},c,el("span",{text:txt}));c.addEventListener("change",function(){arr[i]=c.checked;lab.classList.toggle("done",c.checked);touch();renderPath()});return lab}))}
+function weeksBox(s){var arr=J[s].weeks;return el("div",{class:"wk"},WEEKS.map(function(w,i){var id="w-"+s+"-"+i;var c=el("input",{type:"checkbox",id:id,disabled:ro});c.checked=!!arr[i];
+  var lab=el("label",{for:id,class:arr[i]?"on":""},el("small",{text:"שבוע "+(i+1)}),el("span",{},c," ",w));c.addEventListener("change",function(){arr[i]=c.checked;lab.classList.toggle("on",c.checked);touch();renderPath()});return lab}))}
+function rowsList(s,key,cols,addLabel){if(!Array.isArray(J[s][key]))J[s][key]=[];var rows=J[s][key];var box=el("div",{class:"rows"});
+  var draw=function(){box.replaceChildren();if(!rows.length)box.append(el("p",{class:"muted",text:ro?"לא מולא":"עדיין אין שורות."}));
+    rows.forEach(function(r,ri){var card=el("div",{class:"rowcard"});cols.forEach(function(c){var id="r-"+s+"-"+key+"-"+ri+"-"+c[0];
+      if(c[2]==="time"){var ti=el("input",{type:"time",id:id,readonly:ro});ti.value=r[c[0]]||"";ti.addEventListener("input",function(){r[c[0]]=ti.value;touch()});card.append(el("label",{class:"field",for:id},el("span",{text:c[1]}),ti));return}
+      if(Array.isArray(c[2])){var known=[];c[2].forEach(function(g){known=known.concat(g[1])});
+        if(r[c[0]]&&known.indexOf(r[c[0]])<0&&r[c[0]]!=="אחר"){r[c[0]+"_d"]=(r[c[0]+"_d"]?r[c[0]+"_d"]+" ":"")+r[c[0]];r[c[0]]="אחר"}
+        var sel=el("select",{id:id,disabled:ro},el("option",{value:"",text:"בחירה מהרשימה"}),c[2].map(function(g){return el("optgroup",{label:g[0]},g[1].map(function(o){return el("option",{value:o,text:o})}))}),el("option",{value:"אחר",text:"אחר (לפרט)"}));
+        sel.value=r[c[0]]||"";var did=id+"-d";var det=el("textarea",{id:did,rows:1,readonly:ro,placeholder:"פירוט (לא חובה)","aria-label":c[1]+" – פירוט"});det.value=r[c[0]+"_d"]||"";
+        sel.addEventListener("change",function(){r[c[0]]=sel.value;touch();if(sel.value==="אחר")det.focus()});det.addEventListener("input",function(){r[c[0]+"_d"]=det.value;touch()});
+        card.append(el("div",{class:"field"},el("label",{for:id},el("span",{style:"font-weight:600;font-size:14.5px",text:c[1]})),sel,det));return}
+      var ta=el("textarea",{id:id,rows:2,readonly:ro});ta.value=r[c[0]]||"";
+      ta.addEventListener("input",function(){r[c[0]]=ta.value;touch()});card.append(el("label",{class:"field",for:id},el("span",{text:c[1]}),ta))});
+      if(!ro)card.append(el("button",{class:"btn small ghost del",type:"button",onclick:function(){rows.splice(ri,1);touch();draw()}},"מחיקת השורה"));box.append(card)})};draw();
+  return el("div",{class:"rows"},box,ro?null:el("button",{class:"btn small",type:"button",onclick:function(){var o={};cols.forEach(function(c){o[c[0]]=""});rows.push(o);touch();draw();var f=box.lastChild&&box.lastChild.querySelector("input,select,textarea");if(f)f.focus()}},addLabel))}
+function goalLabel(g){var lv=g&&g.level;var t=lv==="group"?"היעד הקבוצתי":lv==="personal"?"היעד האישי":"היעד הכיתתי";return g&&g.who&&lv&&lv!=="class"?t+" ("+g.who+")":t}
+function goalLevel(s){if(!J[s].goal)J[s].goal={};var g=J[s].goal;var who=el("input",{type:"text",id:"f-"+s+"-goal-who",readonly:ro,placeholder:"ראשי תיבות של התלמיד או שם הקבוצה"});who.value=g.who||"";
+  var whoWrap=el("label",{class:"field",for:who.id,hidden:!(g.level==="group"||g.level==="personal")},el("span",{text:"עבור מי?"}),who);who.addEventListener("input",function(){g.who=who.value;touch()});
+  var opts=[["class","כיתתי"],["group","קבוצתי"],["personal","אישי"]];
+  var chips=el("div",{class:"chips",role:"radiogroup","aria-label":"סוג היעד"},opts.map(function(o){var id="gl-"+s+"-"+o[0];var r=el("input",{type:"radio",name:"gl-"+s,id:id,value:o[0],disabled:ro});r.checked=(g.level||"class")===o[0];
+    var lab=el("label",{class:"chip"+(r.checked?" on":""),for:id},r,o[1]);r.addEventListener("change",function(){g.level=o[0];chips.querySelectorAll(".chip").forEach(function(c){c.classList.toggle("on",c.contains(r))});whoWrap.hidden=o[0]==="class";touch()});return lab}));
+  return el("div",{class:"field"},el("span",{style:"font-weight:600;font-size:14.5px",text:"סוג היעד"}),chips,whoWrap)}
+function sheetsFor(t){var s="s"+t.n;
+  if(t.n===1){if(!J[s].before)J[s].before={};
+    var groups=el("div",{class:"groups"},BEFORE.map(function(g,gi){return el("div",{},el("h4",{text:g[0]}),el("div",{class:"chips"},g[1].map(function(it,ii){var k=gi+"-"+ii,id="b-"+k;var c=el("input",{type:"checkbox",id:id,disabled:ro});c.checked=!!J[s].before[k];
+      var lab=el("label",{class:"chip"+(c.checked?" on":""),for:id},c,it);c.addEventListener("change",function(){J[s].before[k]=c.checked;lab.classList.toggle("on",c.checked);touch()});return lab})))}));
+    return [sheet("דף תצפית קצר",true,el("p",{class:"muted",text:"כותבים מה ראינו ושמענו, בלי פרשנות. תצפית של כ־20 דקות."}),rowsList(s,"obs",OBSCOLS,"הוספת שורה")),
+      sheet("מה קרה רגע לפני? רשימת בדיקה",false,el("p",{class:"muted",text:"הרשימה מתארת את המצב ואינה מעריכה את מי שנתנה את ההנחיה. המטרה היא לגלות מה יעזור לתלמיד להצליח."}),groups,tarea(s+".notWhen","מתי זה לא קורה? באיזה שיעור, עם מי ובאילו תנאים התלמיד מצליח?")),
+      sheet("בחירת יעד",false,goalLevel(s),GOALQ.map(function(q,i){return tarea(s+".goal.q"+i,q)}),el("div",{class:"note idea"},tarea(s+".goal.final","היעד שלנו")))]}
+  if(t.n===2){var pr=el("p",{text:AIPROMPT});
+    var copy=el("button",{class:"btn small",type:"button",onclick:function(e){var b=e.currentTarget;(navigator.clipboard?navigator.clipboard.writeText(AIPROMPT):Promise.reject()).then(function(){b.textContent="הועתק"}).catch(function(){var r=document.createRange();r.selectNodeContents(pr);var sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent="הטקסט מסומן להעתקה"})}},"העתקת ההנחיה");
+    return [sheet("תוכנית שגרת מעבר",true,el("label",{class:"field",for:"f-"+s+"-trans-name"},el("span",{text:"המעבר שבחרתי"}),tinput(s+".trans.name","למשל החזרה מההפסקה")),TRANS.map(function(q,i){return tarea(s+".trans.q"+i,q)})),
+      sheet("הכנת עזר חזותי בעזרת בינה מלאכותית",false,el("div",{class:"note idea"},pr),copy,el("p",{class:"muted",text:"בודקים כל תוצר לפני שמשתמשים בו: האם הוא מובן, מכבד ומתאים לכיתה? בלי פרטים מזהים של תלמידים."}))]}
+  if(t.n===3)return [sheet("תוכנית חיזוק כיתתית",true,REINF.map(function(q,i){return tarea(s+".reinf.q"+i,q)})),sheet("תוכנית להוראת התנהגות חלופית",false,ALT.map(function(q,i){return tarea(s+".alt.q"+i,q)})),
+    el("div",{class:"note idea"},el("b",{text:"משפטי משוב לדוגמה: "}),"\"ראיתי שביקשת עזרה כשהיה קשה. זה בדיוק מה שעוזר להתקדם.\" · \"כל הקבוצה התחילה לעבוד יחד. הכוכב הזה שלכם.\" · \"חיכית בסבלנות לתור שלך. תודה.\"")];
+  if(t.n===4){var grid=el("div",{class:"mapgrid"},MAPR.map(function(r,ri){return el("div",{class:"mr"},el("b",{text:r}),el("div",{class:"mc"},MAPC.map(function(c,ci){return tarea(s+".map.r"+ri+"c"+ci,c)})))}));
+    return [el("div",{class:"note safe"},el("b",{text:"כשיש סכנה, קודם כול בטיחות. "}),"פועלים לפי נוהלי בית הספר, מרחיקים את התלמידים האחרים ומזעיקים עזרה. את הלמידה והניתוח עושים אחר כך, ברוגע."),
+      sheet("מפת תגובה",true,el("label",{class:"field",for:"f-"+s+"-mapfor"},el("span",{text:"עבור (ראשי תיבות או מצב כיתתי)"}),tinput(s+".mapfor")),grid),
+      sheet("דף הסכמות צוותי",false,rowsList(s,"team",TEAMCOLS,"הוספת הסכמה"))]}}
+function measureBox(t){var s="s"+t.n,rows=J[s].measure;var box=el("div",{style:"display:grid;gap:10px"});
+  var draw=function(){box.replaceChildren();if(!rows.length){box.append(el("p",{class:"muted",text:"עדיין אין מדידות. מומלץ למדוד שלוש פעמים לפני השינוי ושלוש פעמים אחריו."}));return}
+    var holder=el("div");holder.innerHTML=chartSVG(rows);
+    box.append(el("div",{class:"legend"},el("span",{},el("i",{style:"background:var(--blue)"}),"לפני השינוי"),el("span",{},el("i",{style:"background:var(--green)"}),"אחרי השינוי")),holder,el("p",{class:"muted",text:msumText(rows)}));
+    box.append(el("div",{},rows.map(function(r,i){return el("div",{class:"mrow"},el("span",{text:heDate(r.date)}),el("span",{class:"pill"+(r.phase==="after"?" after":""),text:r.phase==="after"?"אחרי":"לפני"}),el("b",{text:String(r.value)}),
+      r.fid?el("span",{class:"muted",text:"יישמנו: "+r.fid}):null,r.note?el("span",{class:"muted",text:r.note}):null,ro?null:el("button",{class:"btn small ghost",type:"button","aria-label":"מחיקת המדידה",onclick:function(){rows.splice(i,1);touch();draw()}},"מחיקה"))})))};draw();
+  var TPH={1:"למשל: קם מהכיסא בלי רשות",2:"למשל: התחלת משימת הפתיחה",3:"למשל: בקשת עזרה במילים",4:"למשל: יציאה מהכיתה או פגיעה בחבר"};
+  var head=[el("h3",{text:"המדד שלנו"})];
+  if(ro)return el("div",{class:"card"},head,el("p",{},el("b",{text:"ההתנהגות שעוקבים אחריה: "}),J[s].target||"לא צוינה"),el("p",{class:"muted",text:t.measure}),box);
+  var tid="f-"+s+"-target";var tin=el("input",{type:"text",id:tid,placeholder:TPH[t.n]});tin.value=J[s].target||"";
+  var terr=el("p",{class:"err",role:"alert",hidden:true,text:"כתבי קודם אחרי איזו התנהגות עוקבים"});
+  tin.addEventListener("input",function(){J[s].target=tin.value;terr.hidden=true;touch()});
+  head.push(el("div",{class:"note idea field"},el("label",{for:tid,style:"font-weight:700"},"ההתנהגות שאנחנו עוקבים אחריה"),tin,terr),el("p",{class:"muted",text:t.measure}));
+  var d=el("input",{type:"date",id:"m-date-"+s});d.value=today();
+  var ph=el("select",{id:"m-phase-"+s},el("option",{value:"before",text:"לפני השינוי"}),el("option",{value:"after",text:"אחרי השינוי"}));
+  var v=el("input",{type:"number",id:"m-val-"+s,min:"0",step:"any",inputmode:"decimal"});
+  var f=el("select",{id:"m-fid-"+s},el("option",{value:"",text:"לבחירה"}),el("option",{text:"כן"}),el("option",{text:"חלקית"}),el("option",{text:"לא"}));
+  var n=el("input",{type:"text",id:"m-note-"+s,placeholder:"הערה קצרה (לא חובה)"});
+  return el("div",{class:"card"},head,el("div",{class:"mform"},el("label",{class:"field",for:d.id},el("span",{text:"תאריך"}),d),el("label",{class:"field",for:ph.id},el("span",{text:"מתי"}),ph),
+    el("label",{class:"field",for:v.id},el("span",{text:"התוצאה"}),v),el("label",{class:"field",for:f.id},el("span",{text:"יישמנו כפי שסוכם?"}),f)),n,
+    el("button",{class:"btn primary",type:"button",onclick:function(){if(!(J[s].target||"").trim()){terr.hidden=false;tin.focus();return}if(v.value===""){v.focus();return}rows.push({date:d.value,phase:ph.value,value:+v.value,fid:f.value,note:n.value});
+      rows.sort(function(a,b){return (a.date||"").localeCompare(b.date||"")});v.value="";n.value="";touch();draw()}},"הוספת מדידה"),box)}
+function renderStation(){var t=ST.filter(function(x){return x.n===J.station})[0]||ST[0];var s="s"+t.n;var host=$("station");host.replaceChildren();host.className="wrap st"+t.n;
+  host.append(el("div",{class:"stbar","aria-hidden":"true"},"תחנה "+t.n,el("span",{text:t.title})));
+  host.append(el("div",{class:"station-head"},el("p",{class:"eyebrow",text:"תחנה "+t.n}),el("h2",{text:t.title}),el("p",{text:t.idea}),
+    el("div",{class:"gp"},el("div",{},el("b",{text:"המטרה"}),t.goal),el("div",{},el("b",{text:"התוצר"}),t.product))));
+  host.append(el("div",{class:"card"},el("h3",{text:"השבועות שלנו"}),weeksBox(s)));
+  var sheets=sheetsFor(t);
+  var openSheet=function(title){var d=[].slice.call(host.querySelectorAll("details.sheet")).filter(function(x){return x.querySelector("summary").textContent===title})[0];
+    if(d){d.open=true;d.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"start"});var f=d.querySelector("textarea,input");if(f&&!ro)f.focus({preventScroll:true})}};
+  var sheetTools=sheets.filter(function(x){return x.matches&&x.matches("details.sheet")}).map(function(x){var title=x.querySelector("summary").textContent;
+    return el("div",{class:"tool"},el("div",{},el("b",{text:title}),el("span",{class:"muted",text:SHEETDESC[title]||""})),el("button",{class:"btn small primary",type:"button",onclick:function(){openSheet(title)}},ro?"לצפייה":"למילוי"))});
+  host.append(el("div",{class:"grid2"},el("div",{class:"card"},el("h3",{text:"המשימה שלי לחודש"}),checkList(J[s].tasks,t.tasks,s)),
+    el("div",{class:"card"},el("h3",{text:"הכלים לתחנה"}),el("div",{class:"tools"},sheetTools,t.tools.map(function(x){return el("div",{class:"tool"},el("div",{},el("b",{text:x.n}),el("span",{class:"muted",text:x.d})),
+      x.u?el("a",{class:"btn small",href:x.u,target:"_blank",rel:"noopener noreferrer"},"פתיחה"):el("span",{class:"soon",text:"הקישור יתווסף בקרוב"}))})))));
+  host.append(el("div",{class:"card"},el("h3",{text:"דפי העבודה"}),sheets));
+  host.append(measureBox(t));
+  host.append(el("div",{class:"card"},el("h3",{text:"היומן שלי"}),el("div",{class:"grid2"},JOURNAL.map(function(j){return tarea(s+".journal."+j[0],j[1])}))));
+  if(!ro)host.append(el("div",{class:"card"},el("h3",{text:"סיכום תהליך"}),el("p",{class:"muted",text:"סיכום קצר של מה שהזנת ומה שעשית, בלי פרטים מזהים של תלמידים."}),
+    el("button",{class:"btn primary",type:"button",onclick:openSend},"סיכום תהליך")));}
+function render(){$("tname").value=J.teacherName||"";$("tclass").value=J.className||"";$("tname").readOnly=$("tclass").readOnly=ro;renderPath();renderStation()}
+$("tname").addEventListener("input",function(e){J.teacherName=e.target.value;touch()});
+$("tclass").addEventListener("input",function(e){J.className=e.target.value;touch()});
+
+/* ================= mentor ================= */
+function ago(iso){if(!iso)return"";var d=(Date.now()-Date.parse(iso))/864e5;if(d<1)return"נשלח היום";if(d<2)return"נשלח אתמול";return"נשלח לפני "+Math.floor(d)+" ימים"}
+function renderMentor(){var host=$("teachers");host.replaceChildren();var T=J.mentor.teachers;var ids=Object.keys(T);
+  if(!ids.length){host.append(el("div",{class:"empty"},el("b",{text:"עדיין לא נטענו סיכומים."}),el("span",{text:"כשמחנכת שולחת לך קובץ סיכום, טוענים אותו בכפתור למעלה והיא מופיעה כאן."})));return}
+  ids.sort(function(a,b){return (T[b].exportedAt||"").localeCompare(T[a].exportedAt||"")}).forEach(function(id){var d=norm(T[id]);d.exportedAt=T[id].exportedAt;var st=ST[(d.station||1)-1];var q=(d["s"+st.n].journal||{}).question;
+    host.append(el("div",{class:"card"},el("div",{},el("h3",{text:d.teacherName||"מחנכת"}),el("p",{class:"muted",text:(d.className?"כיתה "+d.className+" · ":"")+ago(d.exportedAt)})),
+      el("p",{},el("b",{text:"תחנה "+st.n+": "}),st.title),
+      el("div",{class:"mini"},ST.map(function(x){var p=pctOf(d,"s"+x.n);return el("div",{},el("span",{text:"תחנה "+x.n}),el("span",{class:"bar"},el("i",{style:"width:"+p+"%"})))})),
+      q?el("div",{class:"note"},el("b",{text:"שאלה למפגש הבא: "}),q):null,
+      el("div",{class:"row"},el("button",{class:"btn",type:"button",onclick:function(){openTeacher(id)}},"פתיחת המסע"),
+        el("button",{class:"btn small ghost",type:"button",onclick:function(){delete J.mentor.teachers[id];touch();renderMentor()}},"הסרה"))))})}
+function openTeacher(id){own=J;viewing=id;J=norm(own.mentor.teachers[id]);ro=true;$("viewing").hidden=false;$("viewing-name").textContent="המסע של "+(J.teacherName||"מחנכת")+" · צפייה בלבד";showMode("journey")}
+function closeTeacher(){if(own){J=own;own=null}viewing=null;ro=false;$("viewing").hidden=true}
+$("back").addEventListener("click",function(){closeTeacher();showMode("mentor")});
+$("v-word").addEventListener("click",function(){var m=$("sendmsg");buildDocx(J,"mentor").then(function(blob){var name="masa-summary_"+safeAscii(J.teacherName)+today()+".docx";download(name,new File([blob],name,{type:blob.type}));$("vmsg").textContent="נשמר: "+name})});
+$("v-pdf").addEventListener("click",function(){exportPDF("mentor",J)});
+function showMode(m){$("j-station").textContent=m==="mentor"?"לראש מבט המנחה":"לתחילת התחנה";$("journey").hidden=m!=="journey";$("mentor").hidden=m!=="mentor";$("b-mentor").setAttribute("aria-pressed",m==="mentor"||!!viewing);
+  $("b-mentor").textContent=m==="mentor"?"חזרה למסע שלי":"מבט מנחה";$("who").hidden=!!viewing||m==="mentor";
+  ["b-send","b-backup","b-settings"].forEach(function(b){$(b).hidden=!!viewing});if(m==="journey")render();else renderMentor()}
+$("b-mentor").addEventListener("click",function(){if(viewing){closeTeacher();showMode("mentor");return}showMode($("mentor").hidden?"mentor":"journey")});
+$("importfile").addEventListener("change",function(e){var files=[].slice.call(e.target.files);e.target.value="";var ok=0,bad=0;
+  Promise.all(files.map(function(f){return (/\.docx$/i.test(f.name)?f.arrayBuffer().then(function(ab){return unzipEntry(ab,"masa/data.json")}).then(function(t){return {json:t}}):f.text().then(function(t){return {text:t}})).then(function(r){var data=null,t=r.text;
+    if(r.json)data=JSON.parse(r.json);else if(/^\s*</.test(t)){var doc=new DOMParser().parseFromString(t,"text/html");var s=doc.getElementById("masa-data");if(s)data=JSON.parse(s.textContent)}else data=JSON.parse(t);
+    if(!data||!data.s1||typeof data.teacherName!=="string")throw 0;
+    var clean=norm(data);clean.exportedAt=typeof data.exportedAt==="string"?data.exportedAt:new Date().toISOString();delete clean.settings;delete clean.mentor;
+    var id=(clean.teacherName+"|"+clean.className).toLowerCase();var prev=J.mentor.teachers[id];if(!prev||(prev.exportedAt||"")<=clean.exportedAt)J.mentor.teachers[id]=clean;ok++}).catch(function(){bad++})}))
+  .then(function(){touch();renderMentor();$("importmsg").textContent=(ok?"נטענו "+ok+" סיכומים. ":"")+(bad?bad+" קבצים לא זוהו כסיכום של המסע שלי בכיתה.":"")})});
+
+function updJump(){var app=$("app");$("jump").hidden=app.hidden||window.scrollY<350}
+window.addEventListener("scroll",updJump,{passive:true});
+$("j-top").addEventListener("click",function(){window.scrollTo({top:0,behavior:reduced()?"auto":"smooth"});var b=$("b-send");if(b)b.focus({preventScroll:true})});
+$("j-station").addEventListener("click",function(){var t=$("mentor").hidden?$("station"):$("mentor");t.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"start"})});
+setTab(false);
+if(!window.crypto||!crypto.subtle)authErr("הדפדפן הזה לא תומך בהצפנה. פתחי את הקישור בכרום, ספארי או אדג׳.");
+})();
+</script>
+<div id="printarea"></div>
+</body>
+</html>
